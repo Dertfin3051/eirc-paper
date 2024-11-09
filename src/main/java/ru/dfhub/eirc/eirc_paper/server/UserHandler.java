@@ -1,0 +1,77 @@
+package ru.dfhub.eirc.eirc_paper.server;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import ru.dfhub.eirc.eirc_paper.Main;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
+import java.util.ConcurrentModificationException;
+
+/**
+ * A class that contains everything needed to work with a user,
+ * including its socket, input/output paths, and message receiving loop.
+ */
+public class UserHandler extends Thread {
+
+    private final Socket socket;
+    private final BufferedReader in;
+    private final PrintWriter out;
+
+    private static final Logger logger = LogManager.getLogger(UserHandler.class);
+
+    private boolean disconnected = false;
+
+    /**
+     * Creating a new user
+     * @param socket User socket
+     */
+    public UserHandler(Socket socket) throws IOException {
+        this.socket = socket;
+        logger.debug("Initializing user I/O streams");
+        in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        out = new PrintWriter(socket.getOutputStream(), true);
+        logger.debug("I/O streams initialized successfully");
+    }
+
+    /**
+     * Cycle of receiving and processing user messages
+     */
+    @Override
+    public void run() {
+        while (!disconnected) {
+            try {
+                String inputMessage = in.readLine();
+                Main.getEircServer().handleUserMessage(inputMessage); // Handle new message
+                if (Main.getEircServer().isQuitMessage(inputMessage)) Main.getEircServer().disconnectUser(this);
+            } catch (IOException e)
+            {
+                logger.error("An error occurred while retrieving user message (%s)".formatted(e.getMessage()));
+            } catch (ConcurrentModificationException e) {} // Ignore this XD
+        }
+    }
+
+    /**
+     * Send message from server to user
+     * @param message Message
+     */
+    public void sendOutMessage(String message) {
+        out.println(message);
+        logger.trace("Message sent to user");
+    }
+
+    public void disconnect() {
+        try {
+            in.close();
+            out.close();
+            socket.close();
+            disconnected = true;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+}
