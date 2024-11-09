@@ -4,9 +4,13 @@ import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import ru.dfhub.eirc.eirc_paper.client.Encryption;
+import ru.dfhub.eirc.eirc_paper.server.GameMessageHandler;
+import ru.dfhub.eirc.eirc_paper.server.GameSessionHandler;
 import ru.dfhub.eirc.eirc_paper.server.Server;
 
 import java.io.IOException;
+
+import static org.bukkit.Bukkit.getPluginManager;
 
 public final class Main extends JavaPlugin {
 
@@ -23,7 +27,7 @@ public final class Main extends JavaPlugin {
             server = new Server(getConfig().getInt("port"));
         } catch (IOException e) {
             e.printStackTrace();
-            Bukkit.getPluginManager().disablePlugin(this);
+            getPluginManager().disablePlugin(this);
             return;
         }
 
@@ -40,9 +44,12 @@ public final class Main extends JavaPlugin {
             Encryption.initEncryption();
         } catch (Exception e) {
             e.printStackTrace();
-            Bukkit.getPluginManager().disablePlugin(this);
+            getPluginManager().disablePlugin(this);
             return;
         }
+
+        getPluginManager().registerEvents(new GameMessageHandler(), this);
+        getPluginManager().registerEvents(new GameSessionHandler(), this);
     }
 
     @Override
