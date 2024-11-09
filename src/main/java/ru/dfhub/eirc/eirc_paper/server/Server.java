@@ -4,6 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONObject;
 import ru.dfhub.eirc.eirc_paper.client.DataParser;
+import ru.dfhub.eirc.eirc_paper.client.ResourcesReader;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -67,6 +68,12 @@ public class Server {
     public void disconnectUser(UserHandler userHandler) {
         users.remove(userHandler);
         userHandler.disconnect();
+    }
+
+    public void handleServerShutdown() {
+        users.forEach(user ->
+                user.sendOutMessage(new ResourcesReader("message_templates/server_shutdown.json").readString())
+        );
     }
 
 }
