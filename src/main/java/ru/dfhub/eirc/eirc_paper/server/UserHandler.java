@@ -45,7 +45,7 @@ public class UserHandler extends Thread {
         while (!disconnected) {
             try {
                 String inputMessage = in.readLine();
-                Main.getEircServer().handleUserMessage(inputMessage); // Handle new message
+                Main.getEircServer().handleUserMessage(inputMessage, false); // Handle new message
                 if (Main.getEircServer().isQuitMessage(inputMessage)) Main.getEircServer().disconnectUser(this);
             } catch (IOException e)
             {

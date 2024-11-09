@@ -87,10 +87,9 @@ public class Encryption {
     }
 
     /**
-     * Generate new key and write it to file
-     * @throws IOException Errors when writing key to file
+     * Generate new key and write it to config
      */
-    public static void generateNewKeyFile() throws IOException {
+    public static void generateNewKeyFile() {
         Main.getInstance().getConfig().set("security-key", generateNewKey());
         Main.getInstance().saveConfig();
     }

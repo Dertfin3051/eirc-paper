@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id "com.github.johnrengelman.shadow" version "8.1.1"
 }
 
 group = 'ru.dfhub.eirc'
@@ -21,6 +22,8 @@ dependencies {
     compileOnly "io.papermc.paper:paper-api:1.21-R0.1-SNAPSHOT"
     implementation "org.json:json:20240303"
 }
+
+tasks.jar { dependsOn(tasks.shadowJar) }
 
 def targetJavaVersion = 21
 java {

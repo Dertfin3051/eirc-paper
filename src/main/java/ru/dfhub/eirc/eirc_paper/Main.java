@@ -1,7 +1,9 @@
 package ru.dfhub.eirc.eirc_paper;
 
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
+import ru.dfhub.eirc.eirc_paper.client.Encryption;
 import ru.dfhub.eirc.eirc_paper.server.Server;
 
 import java.io.IOException;
@@ -10,6 +12,7 @@ public final class Main extends JavaPlugin {
 
     private static Main INSTANCE;
     private static Server server;
+    private static Encryption encryption;
 
     @Override
     public void onEnable() {
@@ -24,6 +27,22 @@ public final class Main extends JavaPlugin {
             return;
         }
 
+        try {
+            Encryption.initKey();
+        } catch (Encryption.EncryptionException e) {
+            Encryption.generateNewKeyFile();
+            //e.printStackTrace();
+            //Bukkit.getPluginManager().disablePlugin(this);
+            return;
+        }
+
+        try {
+            Encryption.initEncryption();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Bukkit.getPluginManager().disablePlugin(this);
+            return;
+        }
     }
 
     @Override
@@ -39,5 +58,7 @@ public final class Main extends JavaPlugin {
         return INSTANCE;
     }
 
-
+    public static void showInGameMessage(Component component) {
+        Bukkit.getOnlinePlayers().forEach(player -> player.sendMessage(component));
+    }
 }

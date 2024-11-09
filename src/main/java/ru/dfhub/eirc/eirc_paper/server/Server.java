@@ -3,6 +3,7 @@ package ru.dfhub.eirc.eirc_paper.server;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONObject;
+import ru.dfhub.eirc.eirc_paper.client.DataParser;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -39,8 +40,11 @@ public class Server {
      * @param message Message data
      * @throws ConcurrentModificationException Error sending message to disconnected user
      */
-    public void handleUserMessage(String message) {
+    public void handleUserMessage(String message, boolean isSelf) {
         users.forEach(user -> user.sendOutMessage(message));
+
+        if (isSelf) return;
+        DataParser.handleInputData(message); // Show message in game
     }
 
     /**
