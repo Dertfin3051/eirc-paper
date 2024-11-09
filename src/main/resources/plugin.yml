@@ -1,0 +1,4 @@
+name: eirc-paper
+version: '${version}'
+main: ru.dfhub.eirc.eirc_paper.Main
+api-version: '1.21'
