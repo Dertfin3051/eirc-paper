@@ -6,6 +6,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import ru.dfhub.eirc.eirc_paper.client.DataParser;
 
+/**
+ * Handling game messages and send it to EIRC
+ */
 public class GameMessageHandler implements Listener {
 
     @EventHandler

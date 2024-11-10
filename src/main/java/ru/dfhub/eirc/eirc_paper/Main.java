@@ -35,8 +35,6 @@ public final class Main extends JavaPlugin {
             Encryption.initKey();
         } catch (Encryption.EncryptionException e) {
             Encryption.generateNewKeyFile();
-            //e.printStackTrace();
-            //Bukkit.getPluginManager().disablePlugin(this);
             return;
         }
 

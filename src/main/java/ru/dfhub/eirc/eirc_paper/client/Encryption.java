@@ -7,7 +7,6 @@ import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.SecureRandom;
@@ -87,7 +86,7 @@ public class Encryption {
     }
 
     /**
-     * Generate new key and write it to config
+     * Generate new key and write it to config.yml
      */
     public static void generateNewKeyFile() {
         Main.getInstance().getConfig().set("security-key", generateNewKey());

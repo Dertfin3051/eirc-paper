@@ -12,10 +12,13 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 
+/**
+ * EnigmaIRC Server
+ */
 public class Server {
 
     private final ServerSocket server;
-    private final ArrayList<UserHandler> users = new ArrayList<>();
+    private final ArrayList<UserHandler> users = new ArrayList<>(); // List of threads, handling users
     private final Logger logger = LogManager.getLogger(this);
 
     public Server(int port) throws IOException {
@@ -23,6 +26,10 @@ public class Server {
         new Thread(this::run).start();
     }
 
+    /**
+     * Main server cycle. Receiving new users and start handlers.
+     * Need to be in separate thread
+     */
     private void run() {
         while (true) {
             try {
@@ -37,8 +44,9 @@ public class Server {
     }
 
     /**
-     * Handle user message (now just send it to every user)
+     * Handle user message
      * @param message Message data
+     * @param isSelf is message sent from server. If true, then it will not be displayed to players
      * @throws ConcurrentModificationException Error sending message to disconnected user
      */
     public void handleUserMessage(String message, boolean isSelf) {
@@ -70,6 +78,9 @@ public class Server {
         userHandler.disconnect();
     }
 
+    /**
+     * Send message to all clients about server shut down
+     */
     public void handleServerShutdown() {
         users.forEach(user ->
                 user.sendOutMessage(new ResourcesReader("message_templates/server_shutdown.json").readString())

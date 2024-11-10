@@ -5,6 +5,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import ru.dfhub.eirc.eirc_paper.client.DataParser;
 
+/**
+ * Handling game session (join/leave) and send it to EIRC
+ */
 public class GameSessionHandler implements Listener {
 
     @EventHandler

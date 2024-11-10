@@ -10,6 +10,7 @@ message-format: "[EIRC] <user> - <message>"
 session-format: "[EIRC] <user> <status>"
 
 # Under what name messages will be sent to other users
+# Only normal text is supported (no formatting)
 # Use <user> placeholder to put player's name
 player-name-format: "[MC] <user>"
 
