@@ -3,6 +3,7 @@ package ru.dfhub.eirc.eirc_paper.server;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONObject;
+import ru.dfhub.eirc.eirc_paper.Main;
 import ru.dfhub.eirc.eirc_paper.client.DataParser;
 import ru.dfhub.eirc.eirc_paper.client.ResourcesReader;
 
@@ -11,6 +12,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
+import java.util.logging.Level;
 
 /**
  * EnigmaIRC Server
@@ -19,7 +21,6 @@ public class Server {
 
     private final ServerSocket server;
     private final ArrayList<UserHandler> users = new ArrayList<>(); // List of threads, handling users
-    private final Logger logger = LogManager.getLogger(this);
 
     public Server(int port) throws IOException {
         server = new ServerSocket(port);
@@ -38,7 +39,7 @@ public class Server {
                 userHandler.start();
                 users.add(userHandler);
             } catch (IOException e) {
-                e.printStackTrace();
+                Main.logger().log(Level.WARNING, "Error occurred while initializing new user!", e);
             }
         }
     }

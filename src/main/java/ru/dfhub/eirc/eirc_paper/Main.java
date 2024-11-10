@@ -9,6 +9,8 @@ import ru.dfhub.eirc.eirc_paper.server.GameSessionHandler;
 import ru.dfhub.eirc.eirc_paper.server.Server;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static org.bukkit.Bukkit.getPluginManager;
 
@@ -17,16 +19,18 @@ public final class Main extends JavaPlugin {
     private static Main INSTANCE;
     private static Server server;
     private static Encryption encryption;
+    private static Logger logger;
 
     @Override
     public void onEnable() {
         INSTANCE = this;
+        logger = getLogger();
         saveDefaultConfig();
 
         try {
             server = new Server(getConfig().getInt("port"));
         } catch (IOException e) {
-            e.printStackTrace();
+            getLogger().log(Level.WARNING, "Error occurred while initializing EnigmaIRC server! ", e);
             getPluginManager().disablePlugin(this);
             return;
         }
@@ -34,6 +38,7 @@ public final class Main extends JavaPlugin {
         try {
             Encryption.initKey();
         } catch (Encryption.EncryptionException e) {
+            getLogger().log(Level.INFO, "Security key is empty or invalid! Generating new one...");
             Encryption.generateNewKeyFile();
             return;
         }
@@ -41,7 +46,7 @@ public final class Main extends JavaPlugin {
         try {
             Encryption.initEncryption();
         } catch (Exception e) {
-            e.printStackTrace();
+            getLogger().log(Level.INFO, "Security key is invalid! Please, generate new one starting plugin with empty key...");
             getPluginManager().disablePlugin(this);
             return;
         }
@@ -65,5 +70,9 @@ public final class Main extends JavaPlugin {
 
     public static void showInGameMessage(Component component) {
         Bukkit.getOnlinePlayers().forEach(player -> player.sendMessage(component));
+    }
+
+    public static Logger logger() {
+        return logger;
     }
 }

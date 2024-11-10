@@ -1,5 +1,5 @@
 # EnigmaIRC Server port
-# DO NOT USE YOUR SERVER PORT
+# DO NOT USE YOUR MINECRAFT SERVER PORT
 port: 6667
 
 # What messages from EIRC will look like in the game

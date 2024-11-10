@@ -4,6 +4,8 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.json.JSONObject;
 import ru.dfhub.eirc.eirc_paper.Main;
 
+import java.util.logging.Level;
+
 /**
  * Class for working with data and processing it
  */
@@ -57,7 +59,7 @@ public class DataParser {
         try {
             template = MessageType.USER_MESSAGE.getTemplate();
         } catch (Exception e) {
-            e.printStackTrace();
+            Main.logger().log(Level.WARNING, "Error occurred while handling output message! (Getting template)", e);
             return;
         }
 
@@ -65,7 +67,7 @@ public class DataParser {
         try {
             encryptedMessage = Encryption.encrypt(message);
         } catch (Exception e) {
-            e.printStackTrace();
+            Main.logger().log(Level.WARNING, "Error occurred while handling output message! (Encrypt process)", e);
             return;
         }
 
@@ -86,7 +88,7 @@ public class DataParser {
         try {
             template = MessageType.USER_SESSION.getTemplate();
         } catch (Exception e) {
-            e.printStackTrace();
+            Main.logger().log(Level.WARNING, "Error occurred while handling output session! (Getting template)", e);
             return;
         }
 
@@ -108,8 +110,7 @@ public class DataParser {
         try {
             message = Encryption.decrypt(encryptedMessage);
         } catch (Exception e) {
-            //Gui.showNewMessage("Failed to decrypt the incoming message! (wrong encryption key)", Gui.MessageType.SYSTEM_ERROR);
-            e.printStackTrace();
+            Main.logger().log(Level.WARNING, "Error occurred while handling input message! (Decrypt process)", e);
             return;
         }
 

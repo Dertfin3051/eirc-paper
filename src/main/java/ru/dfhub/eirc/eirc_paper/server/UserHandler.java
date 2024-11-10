@@ -1,7 +1,6 @@
 package ru.dfhub.eirc.eirc_paper.server;
 
 import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import ru.dfhub.eirc.eirc_paper.Main;
 
 import java.io.BufferedReader;
@@ -10,6 +9,8 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ConcurrentModificationException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * A class that contains everything needed to work with a user,
@@ -21,8 +22,6 @@ public class UserHandler extends Thread {
     private final BufferedReader in;
     private final PrintWriter out;
 
-    private static final Logger logger = LogManager.getLogger(UserHandler.class);
-
     private boolean disconnected = false;
 
     /**
@@ -31,10 +30,8 @@ public class UserHandler extends Thread {
      */
     public UserHandler(Socket socket) throws IOException {
         this.socket = socket;
-        logger.debug("Initializing user I/O streams");
         in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         out = new PrintWriter(socket.getOutputStream(), true);
-        logger.debug("I/O streams initialized successfully");
     }
 
     /**
@@ -49,7 +46,7 @@ public class UserHandler extends Thread {
                 if (Main.getEircServer().isQuitMessage(inputMessage)) Main.getEircServer().disconnectUser(this);
             } catch (IOException e)
             {
-                logger.error("An error occurred while retrieving user message (%s)".formatted(e.getMessage()));
+                Main.logger().log(Level.WARNING, "An error occurred while retrieving user message (%s)".formatted(e.getMessage()));
             } catch (ConcurrentModificationException e) {} // Ignore this XD
         }
     }
@@ -60,7 +57,6 @@ public class UserHandler extends Thread {
      */
     public void sendOutMessage(String message) {
         out.println(message);
-        logger.trace("Message sent to user");
     }
 
     public void disconnect() {
