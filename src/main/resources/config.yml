@@ -3,7 +3,7 @@
 port: 6667
 
 # What messages from EIRC will look like in the game
-# Supports Kyori's components (read more at https://docs.advntr.dev/text.html)
+# Supports Kyori's MiniMessage (read more at https://docs.advntr.dev/minimessage/format.html)
 # message-format - for user messages
 # session-format - for join/leave messages
 message-format: "[EIRC] <user> - <message>"
